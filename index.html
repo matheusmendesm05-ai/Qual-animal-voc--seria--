@@ -59,7 +59,7 @@
     }
 
     .cube.fast-spin {
-      animation: spinFast 0.3s infinite linear !important;
+      animation: spinFast 0.2s infinite linear !important;
     }
 
     .cube__face {
@@ -167,31 +167,31 @@
   <div class="badge">Descubra seu espírito animal</div>
   <h1>Qual Animal você seria?</h1>
 
-  <!-- Cubo 3D -->
+  <!-- Cubo 3D com as tuas fotos locais -->
   <div class="scene">
     <div class="cube" id="cube">
       <div class="cube__face cube__face--front">
-        <img src="https://images.unsplash.com/photo-1540573133985-7585677a328b?auto=format&fit=crop&w=300&q=80" alt="Orangotango">
+        <img src="orangotango.jpg" alt="Orangotango">
       </div>
       <div class="cube__face cube__face--back">
-        <img src="https://images.unsplash.com/photo-1504450758481-7338bbe7524a?auto=format&fit=crop&w=300&q=80" alt="Calango">
+        <img src="calango.jpg" alt="Calango">
       </div>
       <div class="cube__face cube__face--right">
-        <img src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=300&q=80" alt="Jacaré">
+        <img src="jacare.jpg" alt="Jacaré">
       </div>
       <div class="cube__face cube__face--left">
-        <img src="https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=300&q=80" alt="Panda">
+        <img src="sarue.jpg" alt="Saruê">
       </div>
       <div class="cube__face cube__face--top">
-        <img src="https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=300&q=80" alt="Leão">
+        <img src="capivara.jpg" alt="Capivara">
       </div>
       <div class="cube__face cube__face--bottom">
-        <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef9?auto=format&fit=crop&w=300&q=80" alt="Capivara">
+        <img src="leao.jpg" alt="Leão">
       </div>
     </div>
   </div>
 
-  <button id="btn-sortear" onclick="sortearAnimal()">Sortear Novamente</button>
+  <button id="btn-sortear" onclick="sortearAnimal()">Descobrir Animal</button>
 
   <!-- Cartão de Resultado -->
   <div id="result-card">
@@ -204,46 +204,12 @@
 
   <script>
     const animais = [
-      {
-        nome: "Orangotango",
-        emoji: "🦧",
-        foto: "https://images.unsplash.com/photo-1540573133985-7585677a328b?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        nome: "Calango",
-        emoji: "🦎",
-        foto: "https://images.unsplash.com/photo-1504450758481-7338bbe7524a?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        nome: "Jacaré",
-        emoji: "🐊",
-        foto: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        nome: "Saruê",
-        emoji: "🐭",
-        foto: "https://images.unsplash.com/photo-1612170153139-6f881ff067e0?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        nome: "Capivara",
-        emoji: "🦫",
-        foto: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef9?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        nome: "Leão",
-        emoji: "🦁",
-        foto: "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        nome: "Panda",
-        emoji: "🐼",
-        foto: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=500&q=80"
-      },
-      {
-        nome: "Lobo",
-        emoji: "🐺",
-        foto: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=500&q=80"
-      }
+      { nome: "Orangotango", emoji: "🦧", foto: "orangotango.jpg" },
+      { nome: "Calango", emoji: "🦎", foto: "calango.jpg" },
+      { nome: "Jacaré", emoji: "🐊", foto: "jacare.jpg" },
+      { nome: "Saruê", emoji: "🐭", foto: "sarue.jpg" },
+      { nome: "Capivara", emoji: "🦫", foto: "capivara.jpg" },
+      { nome: "Leão", emoji: "🦁", foto: "leao.jpg" }
     ];
 
     function sortearAnimal() {
@@ -254,24 +220,23 @@
       btn.disabled = true;
       resultCard.style.display = 'none';
       
-      // Inicia giro rápido
+      // Giro rápido
       cube.classList.add('fast-spin');
 
       setTimeout(() => {
-        // Para o giro
         cube.classList.remove('fast-spin');
         
         // Sorteia animal
         const sorteado = animais[Math.floor(Math.random() * animais.length)];
         
-        // Atualiza cartão
+        // Atualiza imagem e texto do resultado
         document.getElementById('result-img').src = sorteado.foto;
         document.getElementById('result-name').textContent = `${sorteado.nome} ${sorteado.emoji}`;
         
         // Exibe cartão
         resultCard.style.display = 'flex';
         btn.disabled = false;
-      }, 1500);
+      }, 1200);
     }
   </script>
 
