@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qual Animal Você Seria?</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1e1e2f 0%, #0f0f1a 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    /* Contentor do Cubo 3D */
+    .scene {
+      width: 200px;
+      height: 200px;
+      perspective: 600px;
+      margin: 40px 0;
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: rotateCube 12s infinite linear;
+    }
+
+    .cube__face {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    .cube__face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Posições das 6 faces do cubo */
+    .cube__face--front  { transform: rotateY(  0deg) translateZ(100px); }
+    .cube__face--right  { transform: rotateY( 90deg) translateZ(100px); }
+    .cube__face--back   { transform: rotateY(180deg) translateZ(100px); }
+    .cube__face--left   { transform: rotateY(-90deg) translateZ(100px); }
+    .cube__face--top    { transform: rotateX( 90deg) translateZ(100px); }
+    .cube__face--bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+    @keyframes rotateCube {
+      from { transform: rotateX(0deg) rotateY(0deg); }
+      to   { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    /* Botão e Resultado */
+    button {
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255, 75, 43, 0.6);
+    }
+
+    #result {
+      margin-top: 25px;
+      font-size: 1.4rem;
+      font-weight: 600;
+      min-height: 2rem;
+      text-align: center;
+      color: #ffbe0b;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Qual Animal você seria?</h1>
+
+  <!-- Estrutura do Cubo -->
+  <div class="scene">
+    <div class="cube">
+      <div class="cube__face cube__face--front">
+        <img src="https://images.unsplash.com/photo-1540573133985-7585677a328b?w=300" alt="Orangotango sorrindo">
+      </div>
+      <div class="cube__face cube__face--back">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Rango_character.jpg" alt="Calango Rango">
+      </div>
+      <div class="cube__face cube__face--right">
+        <img src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=300" alt="Jacaré">
+      </div>
+      <div class="cube__face cube__face--left">
+        <img src="https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=300" alt="Panda">
+      </div>
+      <div class="cube__face cube__face--top">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Didelphis_aurita.jpg" alt="Saruê">
+      </div>
+      <div class="cube__face cube__face--bottom">
+        <img src="https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?w=300" alt="Leão">
+      </div>
+    </div>
+  </div>
+
+  <button onclick="descobrirAnimal()">Descobrir Animal</button>
+
+  <div id="result"></div>
+
+  <script>
+    const animais = [
+      { nome: "Orangotango", emoji: "🦧" },
+      { nome: "Saruê", emoji: "🐭" },
+      { nome: "Jacaré", emoji: "🐊" },
+      { nome: "Calango", emoji: "🦎" },
+      { nome: "Leão", emoji: "🦁" },
+      { nome: "Gato", emoji: "🐱" },
+      { nome: "Lobo", emoji: "🐺" },
+      { nome: "Panda", emoji: "🐼" },
+      { nome: "Águia", emoji: "🦅" },
+      { nome: "Urso", emoji: "🐻" },
+      { nome: "Capivara", emoji: "🦫" }
+    ];
+
+    function descobrirAnimal() {
+      const indiceSorteado = Math.floor(Math.random() * animais.length);
+      const animal = animais[indiceSorteado];
+      
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.opacity = 0;
+      
+      setTimeout(() => {
+        resultDiv.textContent = `Você seria um(a) ${animal.nome}! ${animal.emoji}`;
+        resultDiv.style.transition = "opacity 0.3s";
+        resultDiv.style.opacity = 1;
+      }, 150);
+    }
+  </script>
+
+</body>
+</html>
