@@ -1,33 +1,52 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Qual Animal você seria?</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-  
   <style>
     * {
       box-sizing: border-box;
-      user-select: none;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
+      background: #0f0f1a;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       min-height: 100vh;
-      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      padding: 20px;
     }
 
-    /* 3D Scene setup */
+    .badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #ff79c6;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 2.2rem;
+      text-align: center;
+    }
+
+    /* Contentor do Cubo 3D */
     .scene {
-      width: 200px;
-      height: 200px;
-      perspective: 1000px;
-      margin: 20px auto;
+      width: 180px;
+      height: 180px;
+      perspective: 600px;
+      margin: 20px 0 40px 0;
     }
 
     .cube {
@@ -35,24 +54,23 @@
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      will-change: transform;
+      animation: rotateCube 12s infinite linear;
+      transition: animation 0.3s ease;
     }
 
-    /* Cube Face styling with guaranteed non-transparent background */
+    .cube.fast-spin {
+      animation: spinFast 0.3s infinite linear !important;
+    }
+
     .cube__face {
       position: absolute;
-      width: 200px;
-      height: 200px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 20px;
+      width: 180px;
+      height: 180px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
       overflow: hidden;
-      background-color: #1e293b; /* Fallback dark solid color */
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      backface-visibility: visible;
+      background-color: #1a1a2e;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
     }
 
     .cube__face img {
@@ -62,312 +80,200 @@
       display: block;
     }
 
-    .cube__face .face-label {
-      position: absolute;
-      bottom: 8px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(4px);
-      padding: 4px 10px;
-      border-radius: 12px;
+    /* Posições das 6 faces */
+    .cube__face--front  { transform: rotateY(  0deg) translateZ(90px); }
+    .cube__face--right  { transform: rotateY( 90deg) translateZ(90px); }
+    .cube__face--back   { transform: rotateY(180deg) translateZ(90px); }
+    .cube__face--left   { transform: rotateY(-90deg) translateZ(90px); }
+    .cube__face--top    { transform: rotateX( 90deg) translateZ(90px); }
+    .cube__face--bottom { transform: rotateX(-90deg) translateZ(90px); }
+
+    @keyframes rotateCube {
+      from { transform: rotateX(0deg) rotateY(0deg); }
+      to   { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    @keyframes spinFast {
+      from { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+      to   { transform: rotateX(720deg) rotateY(1080deg) rotateZ(360deg); }
+    }
+
+    /* Botão */
+    button {
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(90deg, #ff416c, #8a2be2);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(138, 43, 226, 0.6);
+    }
+
+    /* Cartão do Resultado */
+    #result-card {
+      margin-top: 30px;
+      background: #161625;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 260px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .result-title {
       font-size: 0.75rem;
-      font-weight: 700;
-      color: #f8fafc;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #ff79c6;
+      margin-bottom: 12px;
+      font-weight: bold;
     }
 
-    .cube__face--front  { transform: rotateY(0deg) translateZ(100px); }
-    .cube__face--back   { transform: rotateY(180deg) translateZ(100px); }
-    .cube__face--right  { transform: rotateY(90deg) translateZ(100px); }
-    .cube__face--left   { transform: rotateY(-90deg) translateZ(100px); }
-    .cube__face--top    { transform: rotateX(90deg) translateZ(100px); }
-    .cube__face--bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-    /* Custom Animations */
-    .spinning-glow {
-      animation: pulseGlow 0.4s infinite alternate ease-in-out;
+    .result-img-container {
+      width: 180px;
+      height: 180px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 3px solid #ff416c;
+      margin-bottom: 15px;
     }
 
-    @keyframes pulseGlow {
-      0% { filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.4)); }
-      100% { filter: drop-shadow(0 0 35px rgba(236, 72, 153, 0.9)); }
+    .result-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .card-appear {
-      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.8) translateY(20px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
+    .result-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
     }
   </style>
 </head>
-<body class="text-slate-100 flex flex-col items-center justify-between p-4 min-h-screen">
+<body>
 
-  <header class="text-center mt-4 z-10">
-    <span class="text-xs font-bold tracking-widest text-pink-400 uppercase bg-pink-500/10 px-4 py-1.5 rounded-full border border-pink-500/30 shadow-lg">
-      Descubra seu espírito animal
-    </span>
-    <h1 class="text-3xl md:text-5xl font-extrabold mt-3 bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-200 bg-clip-text text-transparent drop-shadow">
-      Qual Animal você seria?
-    </h1>
-  </header>
+  <div class="badge">Descubra seu espírito animal</div>
+  <h1>Qual Animal você seria?</h1>
 
-  <main class="flex flex-col items-center justify-center my-auto w-full max-w-md">
-    
-    <!-- 3D Cube Scene -->
-    <div class="scene">
-      <div id="cube" class="cube">
-        <!-- Front: Orangotango -->
-        <div class="cube__face cube__face--front">
-          <img id="img-orangotango" alt="Orangotango">
-          <span class="face-label">🦧 Orangotango</span>
-        </div>
-        <!-- Back: Calango -->
-        <div class="cube__face cube__face--back">
-          <img id="img-calango" alt="Calango">
-          <span class="face-label">🦎 Calango</span>
-        </div>
-        <!-- Right: Jacaré -->
-        <div class="cube__face cube__face--right">
-          <img id="img-jacare" alt="Jacaré">
-          <span class="face-label">🐊 Jacaré</span>
-        </div>
-        <!-- Left: Saruê -->
-        <div class="cube__face cube__face--left">
-          <img id="img-sarue" alt="Saruê">
-          <span class="face-label">🐭 Saruê</span>
-        </div>
-        <!-- Top: Leão -->
-        <div class="cube__face cube__face--top">
-          <img id="img-leao" alt="Leão">
-          <span class="face-label">🦁 Leão</span>
-        </div>
-        <!-- Bottom: Panda -->
-        <div class="cube__face cube__face--bottom">
-          <img id="img-panda" alt="Panda">
-          <span class="face-label">🐼 Panda</span>
-        </div>
+  <!-- Cubo 3D -->
+  <div class="scene">
+    <div class="cube" id="cube">
+      <div class="cube__face cube__face--front">
+        <img src="https://images.unsplash.com/photo-1540573133985-7585677a328b?auto=format&fit=crop&w=300&q=80" alt="Orangotango">
+      </div>
+      <div class="cube__face cube__face--back">
+        <img src="https://images.unsplash.com/photo-1504450758481-7338bbe7524a?auto=format&fit=crop&w=300&q=80" alt="Calango">
+      </div>
+      <div class="cube__face cube__face--right">
+        <img src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=300&q=80" alt="Jacaré">
+      </div>
+      <div class="cube__face cube__face--left">
+        <img src="https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=300&q=80" alt="Panda">
+      </div>
+      <div class="cube__face cube__face--top">
+        <img src="https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=300&q=80" alt="Leão">
+      </div>
+      <div class="cube__face cube__face--bottom">
+        <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef9?auto=format&fit=crop&w=300&q=80" alt="Capivara">
       </div>
     </div>
+  </div>
 
-    <!-- Spin Action Button -->
-    <button id="drawBtn" onclick="sortearAnimal()" 
-            class="mt-6 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:via-purple-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 w-full text-lg tracking-wide border border-white/20">
-      <span id="btnText" class="flex items-center justify-center gap-2">
-        <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        Descobrir Animal
-      </span>
-    </button>
+  <button id="btn-sortear" onclick="sortearAnimal()">Sortear Novamente</button>
 
-    <div id="resultCard" class="hidden mt-8 w-full card-appear">
-      <div class="bg-slate-800/90 backdrop-blur-md p-6 rounded-3xl border border-pink-500/30 text-center shadow-2xl flex flex-col items-center">
-        <p class="text-xs uppercase font-bold text-pink-400 tracking-widest mb-3">Você seria um(a):</p>
-        
-        <div class="relative w-48 h-48 rounded-2xl overflow-hidden mb-4 border-4 border-pink-500 shadow-xl bg-slate-900">
-          <img id="resultImg" src="" alt="Animal Sorteado" class="w-full h-full object-cover">
-        </div>
-
-        <h2 id="resultName" class="text-3xl font-extrabold text-amber-300 flex items-center justify-center gap-2">
-          <!-- Animal name and emoji inserted dynamically -->
-        </h2>
-      </div>
+  <!-- Cartão de Resultado -->
+  <div id="result-card">
+    <div class="result-title">Você seria um(a):</div>
+    <div class="result-img-container">
+      <img id="result-img" src="" alt="Animal Sorteado">
     </div>
-
-  </main>
-
-  <footer class="text-xs text-slate-400 py-4 text-center">
-    Projeto "Qual Animal você seria?" • Cubo 3D Interativo
-  </footer>
+    <div class="result-name" id="result-name"></div>
+  </div>
 
   <script>
-    // Generator function for inline SVG data URIs as foolproof image fallbacks
-    function createFallbackSVG(title, emoji, bgColor) {
-      const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-          <rect width="300" height="300" fill="${bgColor}"/>
-          <circle cx="150" cy="130" r="70" fill="rgba(255,255,255,0.15)"/>
-          <text x="150" y="155" font-size="80" text-anchor="middle" dominant-baseline="middle">${emoji}</text>
-          <text x="150" y="240" font-size="24" font-family="sans-serif" font-weight="bold" fill="#ffffff" text-anchor="middle">${title}</text>
-        </svg>
-      `;
-      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    }
-
-    // List of animals with primary Unsplash photos and inline SVG fallbacks
     const animais = [
-      { 
-        id: "orangotango",
-        nome: "Orangotango", 
-        emoji: "🦧", 
-        primaryImg: "https://images.unsplash.com/photo-1540573133985-7585677a328b?auto=format&fit=crop&w=400&q=80",
-        fallbackImg: createFallbackSVG("Orangotango", "🦧", "#b45309")
+      {
+        nome: "Orangotango",
+        emoji: "🦧",
+        foto: "https://images.unsplash.com/photo-1540573133985-7585677a328b?auto=format&fit=crop&w=500&q=80"
       },
-      { 
-        id: "calango",
-        nome: "Calango", 
-        emoji: "🦎", 
-        primaryImg: "https://images.unsplash.com/photo-1504450758481-7338bbe7524a?auto=format&fit=crop&w=400&q=80",
-        fallbackImg: createFallbackSVG("Calango", "🦎", "#15803d")
+      {
+        nome: "Calango",
+        emoji: "🦎",
+        foto: "https://images.unsplash.com/photo-1504450758481-7338bbe7524a?auto=format&fit=crop&w=500&q=80"
       },
-      { 
-        id: "jacare",
-        nome: "Jacaré", 
-        emoji: "🐊", 
-        primaryImg: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=400&q=80",
-        fallbackImg: createFallbackSVG("Jacaré", "🐊", "#047857")
+      {
+        nome: "Jacaré",
+        emoji: "🐊",
+        foto: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=500&q=80"
       },
-      { 
-        id: "sarue",
-        nome: "Saruê", 
-        emoji: "🐭", 
-        primaryImg: "https://images.unsplash.com/photo-1612170153139-6f881ff067e0?auto=format&fit=crop&w=400&q=80",
-        fallbackImg: createFallbackSVG("Saruê", "🐭", "#475569")
+      {
+        nome: "Saruê",
+        emoji: "🐭",
+        foto: "https://images.unsplash.com/photo-1612170153139-6f881ff067e0?auto=format&fit=crop&w=500&q=80"
       },
-      { 
-        id: "leao",
-        nome: "Leão", 
-        emoji: "🦁", 
-        primaryImg: "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=400&q=80",
-        fallbackImg: createFallbackSVG("Leão", "🦁", "#d97706")
+      {
+        nome: "Capivara",
+        emoji: "🦫",
+        foto: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef9?auto=format&fit=crop&w=500&q=80"
       },
-      { 
-        id: "panda",
-        nome: "Panda", 
-        emoji: "🐼", 
-        primaryImg: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef9?auto=format&fit=crop&w=400&q=80",
-        fallbackImg: createFallbackSVG("Panda", "🐼", "#334155")
+      {
+        nome: "Leão",
+        emoji: "🦁",
+        foto: "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?auto=format&fit=crop&w=500&q=80"
       },
-      { 
-        id: "gato",
-        nome: "Gato", 
-        emoji: "🐱", 
-        primaryImg: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80",
-        fallbackImg: createFallbackSVG("Gato", "🐱", "#c026d3")
+      {
+        nome: "Panda",
+        emoji: "🐼",
+        foto: "https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=500&q=80"
       },
-      { 
-        id: "lobo",
-        nome: "Lobo", 
-        emoji: "🐺", 
-        primaryImg: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=400&q=80",
-        fallbackImg: createFallbackSVG("Lobo", "🐺", "#3b82f6")
-      },
-      { 
-        id: "capivara",
-        nome: "Capivara", 
-        emoji: "🦫", 
-        primaryImg: "https://images.unsplash.com/photo-1588167056840-13caf6e4562a?auto=format&fit=crop&w=400&q=80",
-        fallbackImg: createFallbackSVG("Capivara", "🦫", "#854d0e")
+      {
+        nome: "Lobo",
+        emoji: "🐺",
+        foto: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=500&q=80"
       }
     ];
 
-    // Helper to safely load image with fallback
-    function loadImageSafely(elementId, animal) {
-      const img = document.getElementById(elementId);
-      if (!img) return;
-      img.onerror = () => {
-        img.src = animal.fallbackImg;
-      };
-      img.src = animal.primaryImg;
-    }
-
-    // Assign guaranteed images to the 6 cube faces on startup
-    window.addEventListener('DOMContentLoaded', () => {
-      loadImageSafely("img-orangotango", animais[0]);
-      loadImageSafely("img-calango", animais[1]);
-      loadImageSafely("img-jacare", animais[2]);
-      loadImageSafely("img-sarue", animais[3]);
-      loadImageSafely("img-leao", animais[4]);
-      loadImageSafely("img-panda", animais[5]);
-      
-      // Start continuous normal rotation
-      animateCube();
-    });
-
-    let rotX = 0;
-    let rotY = 0;
-    let isSpinning = false;
-
-    const cube = document.getElementById('cube');
-    const drawBtn = document.getElementById('drawBtn');
-    const btnText = document.getElementById('btnText');
-    const resultCard = document.getElementById('resultCard');
-    const resultImg = document.getElementById('resultImg');
-    const resultName = document.getElementById('resultName');
-
-    function animateCube() {
-      if (!isSpinning) {
-        rotX += 0.5;
-        rotY += 0.8;
-      } else {
-        // High speed roulette spin
-        rotX += 22;
-        rotY += 32;
-      }
-      
-      cube.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-      requestAnimationFrame(animateCube);
-    }
-
     function sortearAnimal() {
-      if (isSpinning) return;
+      const cube = document.getElementById('cube');
+      const btn = document.getElementById('btn-sortear');
+      const resultCard = document.getElementById('result-card');
 
-      isSpinning = true;
-      drawBtn.disabled = true;
-      drawBtn.classList.add('opacity-75', 'cursor-not-allowed');
-      cube.classList.add('spinning-glow');
+      btn.disabled = true;
+      resultCard.style.display = 'none';
+      
+      // Inicia giro rápido
+      cube.classList.add('fast-spin');
 
-      // Hide previous result
-      resultCard.classList.add('hidden');
-      resultCard.classList.remove('card-appear');
-
-      btnText.innerHTML = `
-        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        Sorteando animal...
-      `;
-
-      // Spin for 2.5 seconds
       setTimeout(() => {
-        isSpinning = false;
-        cube.classList.remove('spinning-glow');
-
-        // Pick random animal from the full list
+        // Para o giro
+        cube.classList.remove('fast-spin');
+        
+        // Sorteia animal
         const sorteado = animais[Math.floor(Math.random() * animais.length)];
-
-        // Set result image with error handling fallback
-        resultImg.onerror = () => {
-          resultImg.src = sorteado.fallbackImg;
-        };
-        resultImg.src = sorteado.primaryImg;
-
-        resultName.innerHTML = `${sorteado.nome} <span class="text-3xl">${sorteado.emoji}</span>`;
-
-        // Display result card with animation
-        resultCard.classList.remove('hidden');
-        void resultCard.offsetWidth; // Trigger reflow for re-animation
-        resultCard.classList.add('card-appear');
-
-        // Reset button
-        drawBtn.disabled = false;
-        drawBtn.classList.remove('opacity-75', 'cursor-not-allowed');
-        btnText.innerHTML = `
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-          </svg>
-          Sortear Novamente
-        `;
-
-        // Smooth scroll to the result on smaller screens
-        resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-      }, 2500);
+        
+        // Atualiza cartão
+        document.getElementById('result-img').src = sorteado.foto;
+        document.getElementById('result-name').textContent = `${sorteado.nome} ${sorteado.emoji}`;
+        
+        // Exibe cartão
+        resultCard.style.display = 'flex';
+        btn.disabled = false;
+      }, 1500);
     }
   </script>
+
 </body>
 </html>
